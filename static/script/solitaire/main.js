@@ -118,7 +118,26 @@ class Game {
         }
         if (dest.add(src_pile.cards.slice(target.card))) {
             src_pile.remove(target.card);
+            return true;
         }
+        return false;
+    }
+
+    automove(target) {
+        if (!this.moveable(target)) {
+            return false;
+        }
+        for (const foundation of this.foundations) {
+            if (this.move(target, foundation)) {
+                return true;
+            }
+        }
+        for (const pile of this.tableau) {
+            if (this.move(target, pile)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 
@@ -346,7 +365,13 @@ class View {
     }
 
     onDblClick(e) {
-
+        const target = this.findTarget(e.offsetX, e.offsetY);
+        if (!target) {
+            return;
+        }
+        if (this.game.automove(target)) {
+            this.draw();
+        }
     }
 
     onMouseDown(e) {
