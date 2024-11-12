@@ -1,0 +1,10 @@
+@font-face {
+	font-family: 'charter';
+	src: url('/static/font/charter_regular.woff2');
+}
+
+body {
+	font-family: 'charter';
+	background-color:#FFFFFF;
+	color: #111111;
+}
