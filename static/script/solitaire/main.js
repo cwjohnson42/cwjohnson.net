@@ -480,13 +480,12 @@ class PileView {
     }
 
     draw(ctx, until = null) {
-        until = until === null ? this.pile.cards.length : Math.min(this.pile.cards.length, this.pile.cards.length + until);
-        const cards = this.pile.cards.slice(0, until);
+        const cards = this.visibleCards(until);
         if (cards.length <= 0) {
             this.drawEmpty(ctx);
             return;
         }
-        for (let idx = 0; idx < until; idx++) {
+        for (let idx = 0; idx < cards.length; idx++) {
             const x = this.s.x + this.s.spread.x * idx;
             const y = this.s.y + this.s.spread.y * idx;
             drawCard(ctx, cards[idx], this.cs, x, y);
@@ -508,9 +507,16 @@ class PileView {
         ctx.restore();
     }
 
+    visibleCards(until = null) {
+        until = until === null ? this.pile.cards.length : Math.min(this.pile.cards.length, this.pile.cards.length + until);
+        const start = this.s.peek ? Math.max(0, (this.pile.cards.length - this.s.peek)) : 0;
+        return this.pile.cards.slice(start, until);
+    }
+
     intersect(x, y) {
         // TODO: Make each card its own view with a predefined path and use CanvasRenderingContext2D.isPointInPath() to check intersection.
-        if (this.pile.cards.length === 0) {
+        const cards = this.visibleCards();
+        if (cards.length === 0) {
             if (
                    x >= this.s.x && x <= this.s.x + this.cs.w
                 && y >= this.s.y && y <= this.s.y + this.cs.h
@@ -518,14 +524,14 @@ class PileView {
                 return 0;
             }
         }
-        for (let idx = this.pile.cards.length - 1; idx >= 0; idx--) {
+        for (let idx = cards.length - 1; idx >= 0; idx--) {
             const px = this.s.x + this.s.spread.x * idx;
             const py = this.s.y + this.s.spread.y * idx;
             if (
                    x >= px && x <= px + this.cs.w
                 && y >= py && y <= py + this.cs.h
             ) {
-                return idx - this.pile.cards.length;
+                return idx - cards.length;
             }
         }
         return null;

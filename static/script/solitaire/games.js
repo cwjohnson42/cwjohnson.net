@@ -10,7 +10,7 @@ const klondike_style = {
         x: 140,
         y: 20,
         peek: 3,
-        spread: {x: 10, y: 0},
+        spread: {x: 20, y: 0},
     },
     foundations: {
         x: 450,
