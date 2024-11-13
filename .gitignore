@@ -12,3 +12,7 @@ static/img/*
 
 # fonts
 static/font/*
+
+# editor config files
+*.sublime-project
+*.sublime-workspace
